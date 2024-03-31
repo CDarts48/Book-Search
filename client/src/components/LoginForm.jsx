@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
 
 const LoginForm = () => {
-  const [addUser, { error }] = useMutation(LOGIN_USER);
+  const [loginUser, { error }] = useMutation(LOGIN_USER);
 
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated] = useState(false);
@@ -20,38 +20,35 @@ const LoginForm = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
+  
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
-
+  
     try {
-      // const response = await loginUser(userFormData);
-      const { data } = await addUser({
+      const { data } = await loginUser({
         variables: { ...userFormData },
       });
-      console.log(data);
-      Auth.login(data.addUser.token);      if (!response.ok) {
+  
+      if (!data.loginUser.token) {
         throw new Error('something went wrong!');
       }
-
-      // const { token, user } = await response.json();
+  
       Auth.login(data.loginUser.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
     }
-
+  
     setUserFormData({
-      username: '',
       email: '',
       password: '',
     });
   };
-
+  
   return (
     <>
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>

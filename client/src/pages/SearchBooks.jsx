@@ -63,11 +63,17 @@ const SearchBooks = () => {
   };
 
   const handleSaveBook = async (bookId) => {
+    // Check if the book has already been saved
+    if (savedBookIds.includes(bookId)) {
+      console.log('This book has already been saved.');
+      return;
+    }
+  
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
+  
     try {
       const { data } = await saveBook({ variables: { book: bookToSave } });
-      setSavedBookIds([...savedBookIds, saveBook.bookId]);
+      setSavedBookIds([...savedBookIds, data.saveBook.bookId]);
     } catch (err) {
       console.error(err);
     }
