@@ -15,13 +15,7 @@ import { searchGoogleBooks } from '../utils/API';
 import { getSavedBookIds, saveBookIds } from '../utils/localStorage';
 
 const SearchBooks = () => {
-  const [saveBook, { error }] = useMutation(SAVE_BOOK, {
-    context: {
-      headers: {
-        authorization: `Bearer ${Auth.loggedIn() ? Auth.getToken() : null}`
-      }
-    }
-  });
+  const [saveBook, { error }] = useMutation(SAVE_BOOK);
 
   const [searchedBooks, setSearchedBooks] = useState([]);
   const [searchInput, setSearchInput] = useState('');
@@ -73,6 +67,7 @@ const SearchBooks = () => {
   
     try {
       const { data } = await saveBook({ variables: { book: bookToSave } });
+      console.log(data);
       setSavedBookIds([...savedBookIds, data.saveBook.bookId]);
     } catch (err) {
       console.error(err);
