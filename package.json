@@ -8,12 +8,22 @@
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd client && npm run build",
-    "render-build":"npm install && npm run build"
+    "render-build": "cd client && npm install && npm run build"
+  },
+  "engines": {
+    "node": "14.17.1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.24.1",
+    "@babel/core": "^7.24.4",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-react": "^7.24.1",
     "concurrently": "^8.2.0"
+  },
+  "dependencies": {
+    "mongodb": "^6.5.0"
   }
 }
