@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const db = require('./config/connection');
-// const routes = require('./routes');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const { authMiddleware } = require('./utils/auth');
@@ -26,6 +25,11 @@ const startApolloServer = async () => {
     context: authMiddleware
   }));
 
+  // Add this route to handle favicon.ico requests
+  app.get('/favicon.ico', (req, res) => {
+    res.status(204).end(); // Return 204 No Content status code
+  });
+
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/dist')));
 
@@ -43,4 +47,4 @@ const startApolloServer = async () => {
 };
 
 // Call the async function to start the server
-  startApolloServer();
+startApolloServer();
