@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const db = require('./config/connection');
-// const routes = require('./routes');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const { authMiddleware } = require('./utils/auth');
@@ -26,12 +25,15 @@ const startApolloServer = async () => {
     context: authMiddleware
   }));
 
-  if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/dist')));
+  // Add this route to handle favicon.ico requests
+  app.get('/favicon.ico', (req, res) => {
+    res.status(204).end(); // Return 204 No Content status code
+  });
 
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client')));
     app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-    });
+      res.sendFile(path.join(__dirname, '../client/index.html'));    });
   }
 
   db.once('open', () => {
@@ -43,4 +45,4 @@ const startApolloServer = async () => {
 };
 
 // Call the async function to start the server
-  startApolloServer();
+startApolloServer();
