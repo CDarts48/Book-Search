@@ -3,6 +3,8 @@ const { GraphQLError } = require('graphql');
 
 // set token secret and expiration date
 const secret = process.env.JWT_SECRET;
+// const secret = 'mysecretsshhhhh'; Hard coded to run on local host
+
 const expiration = '2h';
 
 module.exports = {
