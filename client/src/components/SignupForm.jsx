@@ -21,9 +21,12 @@ const SignupForm = () => {
     setUserFormData({ ...userFormData, [name]: value });
   };
 
-  const handleFormSubmit = async (event) => {
+  async function handleFormSubmit(event) {
     event.preventDefault();
-
+    console.log(`Email: ${userFormData.email}`);
+    console.log(`Password: ${userFormData.password}`);
+    console.log('handleFormSubmit called with data:', userFormData);
+  
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -33,19 +36,34 @@ const SignupForm = () => {
 
     try {
 
-      // const response = await createUser(userFormData);
-
-      // if (!response.ok) {
-      //   throw new Error('something went wrong!');
-      // }
-
-      // const { token, user } = await response.json();
       const { data } = await addUser({
         variables: { ...userFormData },
       });
+
+      console.log('Received data:', data);
+
+      // Check if userFormData is not empty and contains necessary fields
+      if (!userFormData || !userFormData.username || !userFormData.password) {
+        throw new Error('Invalid user data');
+      }
+
+      // Log the token
+      console.log('Token:', data.addUser.token);
+
+
+      // Check if data contains token
+      if (!data || !data.addUser || !data.addUser.token) {
+        throw new Error('Authentication failed');
+      }
+      // Log the token
+      console.log('Token:', data.addUser.token);
+
       console.log(data);
       Auth.login(data.addUser.token);
     } catch (err) {
+      console.error(err.message);
+      console.error(err.graphQLErrors);
+      console.error(err.networkError);
       console.error(err);
       setShowAlert(true);
     }

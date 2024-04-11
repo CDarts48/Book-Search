@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
 const { GraphQLError } = require('graphql');
 
 // set token secret and expiration date
 const secret = process.env.JWT_SECRET;
 // const secret = 'mysecretsshhhhh'; Hard coded to run on local host
-
 const expiration = '2h';
 
 module.exports = {
@@ -15,8 +15,9 @@ module.exports = {
   }),
 
   // function for our authenticated routes
-  authMiddleware: function ({req}) {
-    // allows token to be sent via  req.query or headers
+  authMiddleware: function ({ req }) {
+    console.log('Incoming request headers:', req.headers);
+    console.log('Incoming request body:', req.body);    // allows token to be sent via  req.query or headers
     let token = req.body.token || req.query.token || req.headers.authorization;
   
     // Log the received token
@@ -49,8 +50,13 @@ module.exports = {
   },
   
   signToken: function ({ username, email, _id }) {
+    console.log('Signing token for user:', { username, email, _id });
     const payload = { username, email, _id };
-
-    return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
+  
+    const token = jwt.sign({ data: payload }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  
+    console.log('Generated token:', token);
+  
+    return token;
   },
 };
